@@ -20,6 +20,13 @@ RUN curl -fSsL -o /usr/local/bin/bazelisk https://github.com/bazelbuild/bazelisk
     && ([ "${BAZELISK_DOWNLOAD_SHA}" = "dev-mode" ] || echo "${BAZELISK_DOWNLOAD_SHA} */usr/local/bin/bazelisk" | sha256sum --check - ) \
     && chmod 0755 /usr/local/bin/bazelisk
 
+# Installing ibazel
+RUN cd /tmp && git clone https://github.com/bazelbuild/bazel-watcher.git \
+    && cd bazel-watcher \
+    && bazelisk build //cmd/ibazel \
+    && mv $PWD/bazel-bin/cmd/ibazel/ibazel_/ibazel /usr/local/bin/ \
+    && cd ~ && rm -rf /tmp/bazel-watcher
+
 # Installing Chrome for testing
 RUN apt-get install -y adwaita-icon-theme alsa-topology-conf alsa-ucm-conf at-spi2-core dconf-gsettings-backend dconf-service fontconfig fontconfig-config fonts-liberation \
         gsettings-desktop-schemas gtk-update-icon-cache hicolor-icon-theme humanity-icon-theme libasound2 libasound2-data libatk-bridge2.0-0 libatk1.0-0 libatk1.0-data \
